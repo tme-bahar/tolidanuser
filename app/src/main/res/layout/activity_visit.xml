@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/back" >
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/header" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="20dp"
+            android:text="اطلاعات شخصی"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
+        <View
+            android:id="@+id/view50"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/logopng" />
+        <TextView android:textSize="20sp"
+            android:id="@+id/editText1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/textView2"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/textView2"
+            android:ems="10"
+            />
+
+        <TextView android:textSize="20sp"
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/textView2"
+            android:layout_marginTop="20dp"
+            android:text="نام خانوادگی:"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:visibility="gone" />
+
+        <TextView android:textSize="20sp"
+            android:id="@+id/editText2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/textView3"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/textView3"
+            android:ems="10"
+            android:visibility="gone" />
+
+        <TextView android:textSize="20sp"
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/textView2"
+            android:layout_marginTop="20dp"
+            android:text="کد ملی:"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView android:textSize="20sp"
+            android:id="@+id/editText3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/textView4"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/textView4"
+            android:ems="10"
+            android:inputType="phone" />
+
+        <TextView android:textSize="20sp"
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/textView4"
+            android:layout_marginTop="20dp"
+            android:text="تاریخ تولد:"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView android:textSize="20sp"
+            android:id="@+id/editText4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/textView5"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/textView5"
+            android:ems="10"
+            android:inputType="number" />
+
+        <TextView android:textSize="20sp"
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/textView5"
+            android:layout_marginTop="20dp"
+            android:text="سن:"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView android:textSize="20sp"
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/textView6"
+            android:layout_alignBottom="@+id/textView6"
+            android:layout_toLeftOf="@+id/textView6"
+            android:text="0"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView android:textSize="20sp"
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/textView6"
+            android:layout_marginTop="20dp"
+            android:text="نام پدر:"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView android:textSize="20sp"
+            android:id="@+id/editText5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/textView8"
+            android:layout_alignParentLeft="true"
+            android:layout_marginRight="13dp"
+            android:layout_toLeftOf="@+id/textView8"
+            android:ems="10" />
+
+        <TextView android:textSize="20sp"
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/textView8"
+            android:layout_marginTop="20dp"
+            android:text="تلفن ثابت:"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView android:textSize="20sp"
+            android:id="@+id/editText6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/textView9"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/textView9"
+            android:ems="10"
+            android:inputType="phone" />
+
+        <TextView android:textSize="20sp"
+            android:id="@+id/textView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/textView9"
+            android:layout_marginTop="20dp"
+            android:text="تلفن همراه:"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView android:textSize="20sp"
+            android:id="@+id/editText7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/textView10"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/textView10"
+            android:ems="10"
+            android:inputType="phone" />
+
+        <TextView android:textSize="20sp"
+            android:id="@+id/textView11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/textView10"
+            android:layout_marginTop="20dp"
+            android:text="آدرس:"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView android:textSize="20sp"
+            android:id="@+id/editText8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/textView11"
+            android:ems="10" />
+
+        <TextView android:textSize="20sp"
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/editText8"
+            android:layout_marginTop="20dp"
+            android:text="میزان تحصیلات:"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView android:textSize="20sp"
+            android:id="@+id/editText9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/textView12"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/textView12"
+            android:ems="10" />
+
+        <TextView android:textSize="20sp"
+            android:id="@+id/textView13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/textView12"
+            android:layout_marginTop="20dp"
+            android:text="آخرین محل تحصیل:"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView android:textSize="20sp"
+            android:id="@+id/editText10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/textView13"
+            android:ems="10" />
+
+        <TextView android:textSize="20sp"
+            android:id="@+id/textView14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/editText10"
+            android:layout_marginTop="20dp"
+            android:text="رشته تحصیلی:"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView android:textSize="20sp"
+            android:id="@+id/editText11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/textView14"
+            android:ems="10" />
+
+        <TextView android:textSize="20sp"
+            android:id="@+id/textView15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/editText11"
+            android:layout_marginTop="20dp"
+            android:text="جنسیت:"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <RadioGroup
+            android:id="@+id/radioGroup1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/textView15"
+            android:layout_marginRight="20dp"
+            android:layout_toLeftOf="@+id/textView15"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/radio0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="مرد" />
+
+            <RadioButton
+                android:id="@+id/radio1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="زن" />
+
+        </RadioGroup>
+        <TextView android:textSize="20sp"
+            android:id="@+id/textView16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/radioGroup1"
+            android:text="ملاحظات:"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:visibility="gone" />
+
+        <TextView android:textSize="20sp"
+            android:id="@+id/editText12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/textView16"
+            android:ems="10"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/editText12"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/button"
+            android:text="ثبت"
+            android:textColor="#ffffff"
+            android:visibility="gone" />
+
+        <TextView android:textSize="20sp"
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/textView100"
+            android:text="نام کامل:"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView android:textSize="20sp"
+            android:id="@+id/textView17"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/textView2"
+            android:layout_toLeftOf="@+id/textView100"
+            android:text="Large Text"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/textView5"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/button"
+            android:text="محاسبه سن"
+            android:textColor="#ffffff"
+            android:visibility="gone" />
+
+
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignBottom="@+id/radioGroup1"
+            android:layout_alignLeft="@+id/radioGroup1"
+            android:layout_alignRight="@+id/radioGroup1"
+            android:layout_alignTop="@+id/radioGroup1" />
+
+        <View
+            android:id="@+id/view3"
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_below="@+id/textView2"
+            android:layout_marginTop="5dp"
+            android:background="#000000" />
+        <View
+            android:id="@+id/view4"
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_below="@+id/textView4"
+            android:layout_marginTop="5dp"
+            android:background="#000000" />
+
+        <View
+            android:id="@+id/view5"
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_below="@+id/textView5"
+            android:layout_marginTop="5dp"
+            android:background="#000000" />
+        <View
+            android:id="@+id/view6"
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_below="@+id/textView6"
+            android:layout_marginTop="5dp"
+            android:background="#000000" />
+        <View
+            android:id="@+id/view7"
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_below="@+id/textView8"
+            android:layout_marginTop="5dp"
+            android:background="#000000" />
+        <View
+            android:id="@+id/view8"
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_below="@+id/textView9"
+            android:layout_marginTop="5dp"
+            android:background="#000000" />
+        <View
+            android:id="@+id/view9"
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_below="@+id/textView10"
+            android:layout_marginTop="5dp"
+            android:background="#000000" />
+
+        <View
+            android:id="@+id/view11"
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_below="@+id/textView12"
+            android:layout_marginTop="5dp"
+            android:background="#000000" />
+
+        <View
+            android:id="@+id/View02"
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/editText8"
+            android:background="#000000" />
+
+        <View
+            android:id="@+id/view12"
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_below="@+id/editText10"
+            android:layout_marginTop="5dp"
+            android:background="#000000" />
+
+
+        <View
+            android:id="@+id/view13"
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_below="@+id/editText11"
+            android:layout_marginTop="5dp"
+            android:background="#000000" />
+
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/photo"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/but"
+            android:text="آپلود تصویر" />
+
+        <View
+            android:id="@+id/view10"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignBottom="@+id/photo"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/view1"
+            android:background="#ffffff" />
+
+        <ImageView
+            android:id="@+id/photo"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_below="@+id/view1"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/download" />
+
+        <TextView
+            android:id="@+id/textView100"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/button4"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="20sp" />
+
+        <View
+            android:id="@+id/view14"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignBottom="@+id/view10"
+            android:layout_alignLeft="@+id/photo"
+            android:layout_alignRight="@+id/photo"
+            android:layout_alignTop="@+id/photo"
+            android:background="@drawable/cir" />
+
+    </RelativeLayout>
+
+
+</ScrollView>
