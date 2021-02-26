@@ -1,5 +1,6 @@
 package ir.fanniherfei.tolid;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URL;
@@ -8,7 +9,9 @@ import java.util.Date;
 
 import ir.fanniherfei.tolid.R;
 import android.R.integer;
+import android.content.Context;
 import android.database.Cursor;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,10 +20,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.CountDownTimer;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -28,10 +33,15 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.cardview.widget.CardView;
+
 public class Main extends Activity {
     static Button ne;
-    ImageView img;
+    View img;
     Bitmap bitmap;
+    int hight;
+    String picturePath;
+    boolean moreOpened = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,28 +52,61 @@ public class Main extends Activity {
         String[] pass=G.password.split("&");
         String a=depass(Integer.parseInt(pass[1]));
         int num=((Integer.parseInt(a)-1)*14)+1;
-        G.name=shared.getString("people"+String.valueOf(num),"");
-        //Button b[]={(Button)findViewById(R.id.button1),(Button)findViewById(R.id.button2),(Button)findViewById(R.id.button3),(Button)findViewById(R.id.button4),(Button)findViewById(R.id.button5),(Button)findViewById(R.id.button7),(Button)findViewById(R.id.button6),(Button)findViewById(R.id.button9)};
+        G.name=shared.getString("people"+ num,"");
         //LOADING PEOPLE
         String[] passs=G.password.split("&");
         String s=depass(Integer.parseInt(passs[1]));
         G.changenum=Integer.parseInt(shared.getString("peoplenumber", "0"));
         G.importPeopleNumber=Integer.parseInt(s.trim());
         G.last=2;
+        CardView cvInfo = findViewById(R.id.cardView2);
+        Button more = findViewById(R.id.button);
+        ViewGroup.LayoutParams cvinfop = cvInfo.getLayoutParams();
+        hight = 150;
+        more.setOnClickListener(v -> {
+            if(!moreOpened){
+            new CountDownTimer(2000, 5) {
+
+            public void onTick(long millisUntilFinished) {
+                if(hight>400)
+                    return;
+                cvinfop.height = cvinfop.height+(int) pxFromDp(Main.this,4);
+                hight+=4;
+                cvInfo.setLayoutParams(cvinfop);
+            }
+            public void onFinish() {
+                more.setText("بستن");
+            }
+        }.start();
+        }else{
+                new CountDownTimer(2000, 5) {
+
+                    public void onTick(long millisUntilFinished) {
+                        if(hight<150)
+                            return;
+                        cvinfop.height = cvinfop.height-(int) pxFromDp(Main.this,4);
+                        hight-=4;
+                        cvInfo.setLayoutParams(cvinfop);
+                    }
+                    public void onFinish() {
+                        more.setText("بیشتر");
+                    }
+                }.start();
+            }
+            moreOpened = !moreOpened;
+        });
         //LOADING PERSON
-        /*try{
-            final TextView tv=(TextView)findViewById(R.id.textView17);
-            tv.setText(String.valueOf(G.importPeopleNumber));
-            final TextView sen=(TextView)findViewById(R.id.textView7);
-            final Button b=(Button)findViewById(R.id.button2);
-            final RadioButton[] rb={(RadioButton)findViewById(R.id.radio0),(RadioButton)findViewById(R.id.radio1)};
-            final TextView[] et={(TextView)findViewById(R.id.editText1)
-                    //,(TextView)findViewById(R.id.editText2),(TextView)findViewById(R.id.editText3),(TextView)findViewById(R.id.editText4),(TextView)findViewById(R.id.editText5),(TextView)findViewById(R.id.editText6),(TextView)findViewById(R.id.editText7),(TextView)findViewById(R.id.editText8),(TextView)findViewById(R.id.editText9),(TextView)findViewById(R.id.editText10),(TextView)findViewById(R.id.editText11),(TextView)findViewById(R.id.editText12)
-            };
+        try{
+            final TextView sen= findViewById(R.id.textView5);
+            final TextView[] et={findViewById(R.id.textView1), findViewById(R.id.textView2), findViewById(R.id.textView2), findViewById(R.id.textView3), findViewById(R.id.textView4), findViewById(R.id.textView6), findViewById(R.id.textView7), findViewById(R.id.textView8), findViewById(R.id.textView9), findViewById(R.id.textView10), findViewById(R.id.textView11), findViewById(R.id.textView12)};
             if(!shared.getString("peoplenumber","0").equals("0")){
                 for(int x=0;x<3;x++){
                     num=((G.importPeopleNumber-1)*14)+1+x;
-                    et[x].setText(shared.getString("people"+String.valueOf(num), ""));
+                    et[x].setText(shared.getString("people"+num, ""));
+                }
+                //name arrange
+                if(et[0].getText().toString().length() >15){
+                    et[0].setTextSize(14);
                 }
                 char[] c=shared.getString("people"+String.valueOf(((G.importPeopleNumber-1)*14)+1+3), "").toCharArray();
                 String birth="";
@@ -71,82 +114,41 @@ public class Main extends Activity {
                     if(3==x){birth=birth+"/";}
                     if(5==x){birth=birth+"/";}}
                 et[3].setText(birth);
-                sen.setText(shared.getString("people"+String.valueOf(((G.importPeopleNumber-1)*14)+1+4), ""));
+                String year = c[2] + String.valueOf(c[3]);
+                SimpleDateFormat formatter= new SimpleDateFormat("yyyy");
+                Date date = new Date(System.currentTimeMillis());
+                String old = String .valueOf(Integer.parseInt(formatter.format(date))-(Integer.parseInt(year)+1921));
+                sen.setText(old);
                 for(int x=4;x<11;x++){
                     num=((G.importPeopleNumber-1)*14)+2+x;
                     et[x].setText(shared.getString("people"+String.valueOf(num), ""));
                 }
-                if(shared.getString("people"+String.valueOf(((G.importPeopleNumber-1)*14)+1+12),"0").equals("0")){rb[1].setVisibility(View.GONE);}else{rb[0].setVisibility(View.GONE);}
-                et[11].setText(shared.getString("people"+String.valueOf(((G.importPeopleNumber-1)*14)+14), ""));
+                if(shared.getString("people"+String.valueOf(((G.importPeopleNumber-1)*14)+1+12),"0").equals("0")){et[11].setText("مرد");}else{et[11].setText("زن");}
             }
-            if(shared.getString("peoplenumber","0").equals(String.valueOf((G.importPeopleNumber-1)))){b.setText("ثبت");}else{b.setText("ویرایش");}
-            b.setOnClickListener(new
-                                         OnClickListener() {
-
-                                             @Override
-                                             public void onClick(View arg0) {
-                                                 // TODO Auto-generated method stu
-                                                 try{
-                                                     try{
-                                                         for(int x=0;x<4;x++){
-                                                             int num=((G.importPeopleNumber-1)*14)+1+x;
-                                                             editor.putString("people"+String.valueOf(num), et[x].getText().toString());
-                                                         }
-                                                         editor.putString("people"+String.valueOf(((G.importPeopleNumber-1)*14)+1+4), sen.getText().toString());
-                                                         for(int x=4;x<11;x++){
-                                                             int num=((G.importPeopleNumber-1)*14)+2+x;
-                                                             editor.putString("people"+String.valueOf(num), et[x].getText().toString());
-                                                         }
-                                                         if(rb[0].isChecked()){editor.putString("people"+String.valueOf(((G.importPeopleNumber-1)*14)+1+12), "0");}else{editor.putString("people"+String.valueOf(((G.importPeopleNumber-1)*14)+1+12), "1");}
-                                                         editor.putString("people"+String.valueOf(((G.importPeopleNumber-1)*14)+14), et[11].getText().toString());
-                                                     }catch (Exception e) {
-                                                         // TODO: handle exception
-                                                         Toast.makeText(getApplicationContext(), "E"+e.toString(), Toast.LENGTH_LONG).show();
-                                                     }
-
-                                                     //try{PeopleManager.b.performClick();}catch (Exception e) {}
-                                                     try{
-                                                         editor.commit();
-                                                         G.last=4;
-                                                         G.send=true;
-                                                         startActivity(new Intent(Visit.this,MainActivity.class));
-                                                         finish();}catch(Exception e){Toast.makeText(getApplicationContext(), e.toString(),Toast.LENGTH_LONG).show();}
-                                                 }catch (Exception e) {
-                                                     at.ToastExceptionMassage(e);
-                                                 }
-
-                                             }
-                                         });
-            Button age=(Button)findViewById(R.id.button1);
-            age.setOnClickListener(new OnClickListener() {
-
-                @Override
-                public void onClick(View arg0) {
-                    // TODO Auto-generated method stub
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-                    String currentDateandTime = sdf.format(new Date());
-                    sen.setText(String.valueOf(CalculateTimeDiffrence(et[3].getText().toString(), currentDateandTime)-622));
-                }
-            });
             //photo
             //showing
-            img = (ImageView)findViewById(R.id.photo);
-            new Visit.LoadImage().execute("http://www.tmebahar.ir/uploads/gallery.php/person_"+String.valueOf(G.importPeopleNumber)+".jpg");
+            img = findViewById(R.id.imageView);
+            new LoadImage().execute("http://www.tmebahar.ir/uploads/gallery.php/person_"+String.valueOf(G.importPeopleNumber)+".jpg");
             //sending
-            Button btpic = (Button) findViewById(R.id.button4);
-            btpic.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-                    photoPickerIntent.setType("image/*");
-                    startActivityForResult(photoPickerIntent, SELECT_PHOTO);
-
-                }
+            CardView cvb = findViewById(R.id.cardView);
+            cvb.setOnClickListener(view -> {
+                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                photoPickerIntent.setType("image/*");
+                startActivityForResult(photoPickerIntent, 100);
             });
 
         }catch (Exception e) {
             Toast.makeText(getApplicationContext(),e.toString(),Toast.LENGTH_LONG).show();
         }
+        //team list
+        //selection
+        final Button teambtn = findViewById(R.id.button11);
+        teambtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     @Override
@@ -154,7 +156,7 @@ public class Main extends Activity {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
 
         switch(requestCode) {
-            case SELECT_PHOTO:
+            case 100:
                 if(resultCode == RESULT_OK){
                     Uri selectedImage = imageReturnedIntent.getData();
                     InputStream imageStream;
@@ -177,13 +179,13 @@ public class Main extends Activity {
                             String lastName=at.getNameAndType(picturePath);
                             String adress=at.rename(picturePath,"person_"+String.valueOf(G.importPeopleNumber));
                             Upload.selectedFilePath=adress;
-                            startActivity(new Intent(Visit.this,Upload.class));
+                            startActivity(new Intent(Main.this,Upload.class));
                             Upload.lastName=lastName;
                             finish();
                         }catch (Exception e) {
                             at.ToastExceptionMassage(e);
                         }
-					/*String subtitle[]=at.split(picturePath,'.');
+					String subtitle[]=at.split(picturePath,'.');
 					String fol[]=at.split(picturePath,'/');
 					String folder=fol[0];
 					for (int i = 1; i < fol.length-1; i++) {
@@ -202,7 +204,7 @@ public class Main extends Activity {
                         Toast.makeText(getApplicationContext(), e.toString(),Toast.LENGTH_LONG).show();
                     }
 
-                }}*/
+                }}
     }
 
     static String depass(int i){
@@ -216,13 +218,6 @@ public class Main extends Activity {
     }
     private class LoadImage extends AsyncTask<String, String, Bitmap> {
         @Override
-        //ایجاد یک دیالوگ برای بارگذاری تصویر
-        protected void onPreExecute() {
-            super.onPreExecute();
-            //pDialog = new ProgressDialog(NewPerson.this);
-            //pDialog.setMessage("bargozar tasvir....");
-            //pDialog.show();
-        }
         //استفاده از bitmap برای دریافت اطلاعات از ادرس و نمایش اون
         protected Bitmap doInBackground(String... args) {
             try {
@@ -234,14 +229,12 @@ public class Main extends Activity {
         }
         protected void onPostExecute(Bitmap image) {
             if(image != null){
-                img.setImageBitmap(image);
-                //pDialog.dismiss();
+                img.setBackground(new BitmapDrawable(getResources(), image));
             }else{
-                //pDialog.dismiss();
-                //ایجاد یک توست جهت نمایش دانلود نشدن تصویر
-                //Toast.makeText(NewPerson.this, "تصویر مد نظر یافت نشد و یا دسترسی به اینترنت  موجود نیست", Toast.LENGTH_SHORT).show();
-                //img.setBackgroundResource(R.drawable.download);
             }
         }
+    }
+    public static float pxFromDp(final Context context, final float dp) {
+        return dp * context.getResources().getDisplayMetrics().density;
     }
 }

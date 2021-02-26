@@ -17,23 +17,30 @@ import android.text.Editable;
 import android.text.PrecomputedText;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -64,19 +71,17 @@ public class First extends Activity {
         pro = (ProgressBar)findViewById(R.id.progressBar);
         final SharedPreferences shared = getSharedPreferences("Prefs", MODE_PRIVATE);
         final Button b=(Button)findViewById(R.id.button1);
-        final Button p=(Button)findViewById(R.id.button2);
+        final FloatingActionButton p=(FloatingActionButton)findViewById(R.id.button2);
         final CardView cv = (CardView)findViewById(R.id.cardView);
         final EditText[] et={(EditText)findViewById(R.id.editText1),(EditText)findViewById(R.id.editText2)};
         final SharedPreferences.Editor editor = shared.edit();
         final CardView maincv = (CardView)findViewById(R.id.card);
         pro.setVisibility(View.GONE);
         //animation
-        maincv.getLayoutParams().height = (int)pxFromDp(this,210);
-        hight = 210;
+        maincv.getLayoutParams().height = (int)pxFromDp(this,250);
+        hight = 270;
         et[0].setVisibility(View.GONE);
         et[1].setVisibility(View.GONE);
-        b.setVisibility(View.GONE);
-        p.setVisibility(View.GONE);
         Animation fadeIn = new AlphaAnimation(0, 1);
         fadeIn.setDuration(1000);
         AnimationSet animation = new AnimationSet(true);
@@ -93,7 +98,7 @@ public class First extends Activity {
                 new CountDownTimer(1000, 20) {
 
                     public void onTick(long millisUntilFinished) {
-                        if(hight>290)
+                        if(hight>325)
                             return;
                         mcvp.height = mcvp.height+(int) pxFromDp(First.this,4);
                         hight+=4;
@@ -125,7 +130,7 @@ public class First extends Activity {
                 new CountDownTimer(1000, 20) {
 
                     public void onTick(long millisUntilFinished) {
-                        if(hight>350)
+                        if(hight>394)
                             return;
                         mcvp.height = mcvp.height+(int) pxFromDp(First.this,4);
                         hight+=4;
@@ -136,38 +141,19 @@ public class First extends Activity {
                 }.start();
             }
         });
-        et[1].addTextChangedListener(new TextWatcher() {
+        et[1].setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if(b.getVisibility() == View.VISIBLE)
-                    return;
-                b.setVisibility(View.VISIBLE);
-                p.setVisibility(View.VISIBLE);
-                new CountDownTimer(1000, 20) {
-
-                    public void onTick(long millisUntilFinished) {
-                        if(hight>400)
-                            return;
-                        mcvp.height = mcvp.height+(int) pxFromDp(First.this,4);
-                        hight+=4;
-                        maincv.setLayoutParams(mcvp);
-                    }
-                    public void onFinish() {
-                    }
-                }.start();
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                    b.performClick();
+                    handled = true;
+                }
+                return handled;
             }
         });
-
         editor.putBoolean("connected", false);
         editor.apply();
         OnClickListener o=new OnClickListener() {
@@ -175,6 +161,17 @@ public class First extends Activity {
             @Override
             public void onClick(View arg0) {
                 // TODO Auto-generated method stub
+                if(et[0].getVisibility() == View.GONE){
+                    cv.performClick();
+                    return;}
+                if(et[0].getText().toString().length() != 10){
+                    at.Toast("شماره ملی باید 10 رقم باشد");
+                    return;
+                }
+                if(et[1].getText().toString().isEmpty()){
+                    at.Toast("رمز عبور را پر کنید");
+                    return;
+                }
                 G.url2=et[0].getText().toString()+"&"+et[1].getText().toString();
                 G.password=G.url2;
                 G.url2="a";
@@ -333,6 +330,7 @@ public class First extends Activity {
                         Toast.makeText(getApplicationContext(), e.toString(),Toast.LENGTH_LONG).show();
                     }
                 }catch(Exception e){
+                    pro.setVisibility(View.GONE);
                      Toast.makeText(getApplicationContext(),"تیم ها و محصولات دریافت نشدند!",Toast.LENGTH_LONG).show();
                 }
                 try{
@@ -358,12 +356,14 @@ public class First extends Activity {
                 }catch(Exception e){
                     e.printStackTrace();}
                 editor.commit();
-            }catch(Exception e){Toast.makeText(getApplicationContext(), "نمی توان اطلاعات را خواند!!", Toast.LENGTH_LONG).show();}
+            }catch(Exception e){pro.setVisibility(View.GONE);
+            Toast.makeText(getApplicationContext(), "نمی توان اطلاعات را خواند!!", Toast.LENGTH_LONG).show();}
             G.recieve=false;
            if(G.connect){
                 try{
                     G.connect=false;
-                    if(G.resultText.toString().equals("error")){Toast.makeText(getApplicationContext(), "خطا! \n رمز عبور و یا نام کاربری اشتباه است"+G.resultText, Toast.LENGTH_LONG).show();}else{
+                    if(G.resultText.toString().equals("error")){pro.setVisibility(View.GONE);
+                    Toast.makeText(getApplicationContext(), "خطا! \n رمز عبور و یا نام کاربری اشتباه است"+G.resultText, Toast.LENGTH_LONG).show();}else{
                         String[] pass=G.password.split("&");
                         String a=depass(Integer.parseInt(pass[1]));
                         int num=((Integer.parseInt(a)-1)*14)+3;
@@ -373,7 +373,8 @@ public class First extends Activity {
                             G.name=shared.getString("people"+String.valueOf(num-1),"");
                             Toast.makeText(getApplicationContext(), "اتصال با موفقیت برقرار شد.", Toast.LENGTH_LONG).show();
                             editor.putBoolean("connected",true);editor.commit();
-                            startActivity(new Intent(First.this,Main.class));finish();}else{Toast.makeText(getApplicationContext(),"نام کاربری یا رمز عبور اشتباه است",Toast.LENGTH_LONG).show();}}}catch(Exception e){Toast.makeText(getApplicationContext(), "خطا",Toast.LENGTH_LONG).show();}
+                            startActivity(new Intent(First.this,Main.class));finish();}else{pro.setVisibility(View.GONE);
+                            Toast.makeText(getApplicationContext(),"نام کاربری یا رمز عبور اشتباه است",Toast.LENGTH_LONG).show();}}}catch(Exception e){Toast.makeText(getApplicationContext(), "خطا",Toast.LENGTH_LONG).show();}
             }
             return;
         }
