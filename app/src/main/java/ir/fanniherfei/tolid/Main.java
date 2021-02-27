@@ -5,12 +5,15 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import ir.fanniherfei.tolid.R;
 import android.R.integer;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -34,6 +37,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class Main extends Activity {
     static Button ne;
@@ -42,6 +50,7 @@ public class Main extends Activity {
     int hight;
     String picturePath;
     boolean moreOpened = false;
+    boolean teamOpened = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,13 +149,37 @@ public class Main extends Activity {
         }catch (Exception e) {
             Toast.makeText(getApplicationContext(),e.toString(),Toast.LENGTH_LONG).show();
         }
+        //constrant
+        final ConstraintLayout cons = findViewById(R.id.cons);
         //team list
-        //selection
+        //team list
+        ArrayList<String> data = new ArrayList<>();
+        data.add("team1");
+        data.add("team2");
+        data.add("team3");
+        final RecyclerView teams = findViewById(R.id.teams);
+        teams.setLayoutManager(new LinearLayoutManager(this));
+        teams.setAdapter(new MyRecyclerViewAdapter(Main.this,data));
+        //opening and closing
         final Button teambtn = findViewById(R.id.button11);
+        final View teamBottom = findViewById(R.id.button12);
+        final CardView topTeamHolder = findViewById(R.id.topTeamHolder);
         teambtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(teamOpened){
+                    teambtn.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(Main.this,R.drawable.arrow_down), null);
+                    teamBottom.setBackgroundColor(Color.parseColor("#757575"));
+                    topTeamHolder.setVisibility(View.GONE);
+                    teams.setVisibility(View.GONE);
+                    teamOpened = false;
+                }else{
+                    teambtn.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(Main.this,R.drawable.arrow_up), null);
+                    teamBottom.setBackgroundColor(Color.parseColor("#03DAC5"));
+                    topTeamHolder.setVisibility(View.VISIBLE);
+                    teams.setVisibility(View.VISIBLE);
+                    teamOpened = true;
+                }
             }
         });
     }
