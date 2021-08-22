@@ -242,8 +242,8 @@ public class MainActivity extends Activity {
                 G.send=true;startActivity(new Intent(MainActivity.this,MainActivity.class));G.progress=true;finish();}else{
                 try {
                     G.connect=true;
-                    G.result=page_output.trim();
-                    G.resultText=encode(page_output.trim());
+                    //G.result=page_output.trim();
+                    //G.resultText=encode(page_output.trim());
                     int newss=0;
                     int nnews=0;
                     if(G.recieve){
@@ -253,7 +253,7 @@ public class MainActivity extends Activity {
                             for(int x=0;x<Integer.parseInt(shared.getString("peoplenumber", "0"));x++){
                                 if(shared.getString("people"+String.valueOf((x*14)+2),"").length()!=0){newss++;}
                             }
-                            String[] tables=G.resultText.split("©");
+                            String[] tables="G.resultText".split("©");
                             try{
                                 String[] projects=tables[1].split("®");
                                 try {

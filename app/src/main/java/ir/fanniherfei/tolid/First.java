@@ -4,6 +4,7 @@ import ir.fanniherfei.tolid.R;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -61,6 +62,8 @@ import java.nio.charset.StandardCharsets;
 public class First extends Activity {
     ProgressBar pro;
     int hight;
+    Button b;
+    String nationalCode;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,85 +73,41 @@ public class First extends Activity {
         at.c=getApplicationContext();
         pro = (ProgressBar)findViewById(R.id.progressBar);
         final SharedPreferences shared = getSharedPreferences("Prefs", MODE_PRIVATE);
-        final Button b=(Button)findViewById(R.id.button1);
+        b=(Button) findViewById(R.id.button10);
         final FloatingActionButton p=(FloatingActionButton)findViewById(R.id.button2);
-        final CardView cv = (CardView)findViewById(R.id.cardView);
         final EditText[] et={(EditText)findViewById(R.id.editText1),(EditText)findViewById(R.id.editText2)};
         final SharedPreferences.Editor editor = shared.edit();
         final CardView maincv = (CardView)findViewById(R.id.card);
         pro.setVisibility(View.GONE);
-        //animation
-        maincv.getLayoutParams().height = (int)pxFromDp(this,250);
-        hight = 270;
-        et[0].setVisibility(View.GONE);
-        et[1].setVisibility(View.GONE);
-        Animation fadeIn = new AlphaAnimation(0, 1);
-        fadeIn.setDuration(1000);
-        AnimationSet animation = new AnimationSet(true);
-        animation.addAnimation(fadeIn);
-        cv.setAnimation(animation);
-        animation.start();
-        ViewGroup.LayoutParams mcvp = maincv.getLayoutParams();
-        cv.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(et[0].getVisibility() == View.VISIBLE)
-                    return;
-                    et[0].setVisibility(View.VISIBLE);
-                new CountDownTimer(1000, 20) {
-
-                    public void onTick(long millisUntilFinished) {
-                        if(hight>325)
-                            return;
-                        mcvp.height = mcvp.height+(int) pxFromDp(First.this,4);
-                        hight+=4;
-                        maincv.setLayoutParams(mcvp);
-                    }
-                    public void onFinish() {
-                    }
-                }.start();
-            }
-        });
-        et[0].addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if(et[1].getVisibility() == View.VISIBLE)
-                    return;
-                if(s.toString().length() != 10)
-                    return;
-                et[1].setVisibility(View.VISIBLE);
-                new CountDownTimer(1000, 20) {
-
-                    public void onTick(long millisUntilFinished) {
-                        if(hight>394)
-                            return;
-                        mcvp.height = mcvp.height+(int) pxFromDp(First.this,4);
-                        hight+=4;
-                        maincv.setLayoutParams(mcvp);
-                    }
-                    public void onFinish() {
-                    }
-                }.start();
-            }
-        });
         et[1].setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 boolean handled = false;
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                if (actionId == EditorInfo.IME_ACTION_DONE||(actionId == EditorInfo.IME_ACTION_NEXT)) {
                     InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
                     imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
                     b.performClick();
+                    handled = true;
+                }
+                return handled;
+            }
+        });
+        et[0].setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if ((actionId == EditorInfo.IME_ACTION_DONE)||(actionId == EditorInfo.IME_ACTION_NEXT)) {
+                    if(et[0].getVisibility() == View.GONE){
+                        handled = true;
+                        return handled;}
+                    if(et[0].getText().toString().length() != 10){
+                        at.Toast("شماره ملی باید 10 رقم باشد");
+                        handled = true;
+                        return handled;
+                    }
+                    et[1].requestFocus();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.showSoftInput(et[1], InputMethodManager.SHOW_IMPLICIT);
                     handled = true;
                 }
                 return handled;
@@ -161,9 +120,8 @@ public class First extends Activity {
             @Override
             public void onClick(View arg0) {
                 // TODO Auto-generated method stub
-                if(et[0].getVisibility() == View.GONE){
-                    cv.performClick();
-                    return;}
+                if(!"ورود".equals(b.getText().toString()))
+                    return;
                 if(et[0].getText().toString().length() != 10){
                     at.Toast("شماره ملی باید 10 رقم باشد");
                     return;
@@ -172,14 +130,13 @@ public class First extends Activity {
                     at.Toast("رمز عبور را پر کنید");
                     return;
                 }
+                nationalCode = et[0].getText().toString();
                 G.url2=et[0].getText().toString()+"&"+et[1].getText().toString();
                 G.password=G.url2;
                 G.url2="a";
                 G.recieve=true;
                 G.last=1;
                 new NetCheck().execute();
-                //startActivity(new Intent(First.this,MainActivity.class));
-                //finish();
             }
         };
         b.setOnClickListener(o);
@@ -199,7 +156,7 @@ public class First extends Activity {
 
     private class NetCheck extends AsyncTask<String,String,Boolean>
     {
-
+        CountDownTimer cdt;
         /**
          * Gets current device state and checks for working internet connection by trying Google.
          **/
@@ -207,6 +164,29 @@ public class First extends Activity {
         protected void onPreExecute() {
             super.onPreExecute();
             pro.setVisibility(View.VISIBLE);
+            b.setText("- - - در حال اجرا - - -");
+            b.setBackgroundResource(R.color.c4);
+            cdt = new CountDownTimer(500,500) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+
+                }
+
+                @Override
+                public void onFinish() {
+                    if(b.getText().toString().equals("ورود"))
+                        return;
+                    if(b.getText().toString().contains("- - -")){
+                        b.setText("در حال اجرا");
+                        cdt.start();
+                    }else {
+                        b.setText("- "+b.getText().toString() + " -");
+                        cdt.start();
+                    }
+
+                }
+            };
+            cdt.start();
         }
         @Override
         protected Boolean doInBackground(String... args){
@@ -242,6 +222,8 @@ public class First extends Activity {
                 at.Toast("خطا در برقراری ارتباط");
                 G.conn=false;
                 pro.setVisibility(View.GONE);
+                b.setText("ورود");
+                b.setBackgroundResource(R.drawable.but);
             }
         }
     }
@@ -292,21 +274,30 @@ public class First extends Activity {
 
         @Override
         protected void onPostExecute(String page_output) {
-            at.Toast(page_output);
             final SharedPreferences shared = getSharedPreferences("Prefs", MODE_PRIVATE);
             final SharedPreferences.Editor editor = shared.edit();
-            G.result=page_output.trim();
+            DataOprate dp = new DataOprate(page_output);
             int newss=0;
             int nnews=0;
             G.connect=true;
-            G.result=page_output.trim();
-            G.resultText=MainActivity.encode(page_output.trim());
+            //G.result=page_output.trim();
+            //G.resultText=MainActivity.encode(page_output.trim());
+            //if(G.resultText.toString().equals("error")){
+            if(dp.hasError){
+                pro.setVisibility(View.GONE);
+                b.setText("ورود");
+                //Toast.makeText(getApplicationContext(), "خطا! \n رمز عبور و یا نام کاربری اشتباه است"+G.resultText, Toast.LENGTH_LONG).show();}else{
+                Toast.makeText(getApplicationContext(), "خطا! \n رمز عبور و یا نام کاربری اشتباه است"+dp.getText(), Toast.LENGTH_LONG).show();
+                return;
+            }
+            Main.user = dp.getPerson(nationalCode);
             try{
 
                 for(int x=0;x<Integer.parseInt(shared.getString("peoplenumber", "0"));x++){
                     if(shared.getString("people"+String.valueOf((x*14)+2),"").length()!=0){newss++;}
                 }
-                String[] tables=G.resultText.split("©");
+                //String[] tables=G.resultText.split("©");
+                String[] tables=dp.getText().split("©");
                 try{
                     String[] projects=tables[1].split("®");
                     try {
@@ -331,7 +322,9 @@ public class First extends Activity {
                     }
                 }catch(Exception e){
                     pro.setVisibility(View.GONE);
-                     Toast.makeText(getApplicationContext(),"تیم ها و محصولات دریافت نشدند!",Toast.LENGTH_LONG).show();
+                    b.setText("ورود");
+                    b.setBackgroundResource(R.drawable.but);
+                    Toast.makeText(getApplicationContext(),"تیم ها و محصولات دریافت نشدند!",Toast.LENGTH_LONG).show();
                 }
                 try{
                     String[] people=tables[2].split("®");
@@ -357,26 +350,35 @@ public class First extends Activity {
                     e.printStackTrace();}
                 editor.commit();
             }catch(Exception e){pro.setVisibility(View.GONE);
-            Toast.makeText(getApplicationContext(), "نمی توان اطلاعات را خواند!!", Toast.LENGTH_LONG).show();}
-            G.recieve=false;
+                b.setBackgroundResource(R.drawable.but);
+                b.setText("ورود");
+                Toast.makeText(getApplicationContext(), "نمی توان اطلاعات را خواند!!", Toast.LENGTH_LONG).show();}
+                G.recieve=false;
            if(G.connect){
                 try{
                     G.connect=false;
-                    if(G.resultText.toString().equals("error")){pro.setVisibility(View.GONE);
-                    Toast.makeText(getApplicationContext(), "خطا! \n رمز عبور و یا نام کاربری اشتباه است"+G.resultText, Toast.LENGTH_LONG).show();}else{
-                        String[] pass=G.password.split("&");
-                        String a=depass(Integer.parseInt(pass[1]));
-                        int num=((Integer.parseInt(a)-1)*14)+3;
-                        //Toast.makeText(getApplicationContext(),String.valueOf(pass[1].trim())+shared.getString("people"+String.valueOf(3), ",").trim(), Toast.LENGTH_LONG).show();
 
-                        if(shared.getString("people"+String.valueOf(num), "").trim().equals(pass[0].trim())){
-                            G.name=shared.getString("people"+String.valueOf(num-1),"");
-                            Toast.makeText(getApplicationContext(), "اتصال با موفقیت برقرار شد.", Toast.LENGTH_LONG).show();
-                            editor.putBoolean("connected",true);editor.commit();
-                            startActivity(new Intent(First.this,Main.class));finish();}else{pro.setVisibility(View.GONE);
-                            Toast.makeText(getApplicationContext(),"نام کاربری یا رمز عبور اشتباه است",Toast.LENGTH_LONG).show();}}}catch(Exception e){Toast.makeText(getApplicationContext(), "خطا",Toast.LENGTH_LONG).show();}
+                    String[] pass=G.password.split("&");
+                    String a=depass(Integer.parseInt(pass[1]));
+                    int num=((Integer.parseInt(a)-1)*14)+3;
+                    //Toast.makeText(getApplicationContext(),String.valueOf(pass[1].trim())+shared.getString("people"+String.valueOf(3), ",").trim(), Toast.LENGTH_LONG).show();
+
+                    if(shared.getString("people"+String.valueOf(num), "").trim().equals(pass[0].trim())){
+                        G.name=shared.getString("people"+String.valueOf(num-1),"");
+                        Toast.makeText(getApplicationContext(), "اتصال با موفقیت برقرار شد.", Toast.LENGTH_LONG).show();
+                        editor.putBoolean("connected",true);editor.commit();
+                        startActivity(new Intent(First.this,Main.class));finish();}else{
+                        pro.setVisibility(View.GONE);
+                        b.setBackgroundResource(R.drawable.but);
+                        b.setText("ورود");
+                        Toast.makeText(getApplicationContext(),"نام کاربری یا رمز عبور اشتباه است",Toast.LENGTH_LONG).show();}
+
+                }catch(Exception e){
+                    pro.setVisibility(View.GONE);
+                    b.setBackgroundResource(R.drawable.but);
+                    b.setText("ورود");
+                    Toast.makeText(getApplicationContext(), "خطا",Toast.LENGTH_LONG).show();}
             }
-            return;
         }
     }
 

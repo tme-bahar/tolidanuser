@@ -8,8 +8,8 @@ public class G extends Application {
     public static String url="";
     public static int last=0;
     public static boolean connect=false;
-    public static String result="";
-    public static String resultText="";
+    //public static String result="";
+    //public static String resultText="";
     public static int importProjectNumber=1;
     public static int importPeopleNumber=1;
     public static boolean send=false;
