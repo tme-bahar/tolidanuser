@@ -11,7 +11,7 @@ public class DataOprate {
     private String text = "";
     public boolean hasError ;
     private String[] taxtTables;
-    private ArrayList<String> tables[] = new ArrayList[5];
+    private ArrayList<String>[] tables = new ArrayList[5];
     private ArrayList<Project> allprojects = new ArrayList<>();
     private ArrayList<Team> allTeams = new ArrayList<>();
     private ArrayList<Person> people = new ArrayList<>();
@@ -31,10 +31,25 @@ public class DataOprate {
         exportTeamsAndProjects(tables[1]);
         exportPeopleAndNews(tables[2]);
     }
-    //
+
+    //get person
     public Person getPerson(String nationalCode){
         return Person.findByNationalCode(people,nationalCode);
     }
+
+    //get teams by person
+    public List<Team> getTeams(Person person){return getTeams(person.name);}
+
+    //get teams by person
+    private List<Team> getTeams(String partnerName){
+        List<Team> result = new ArrayList<>();
+        for (Team t:allTeams)
+            for (PersonInTeam p:t.people)
+                if (p.name.equals(partnerName))
+                    result.add(t);
+        return result;
+    }
+
     //object people and news
     private void exportPeopleAndNews(ArrayList<String> PeopleAndNews){
         ArrayList<Person> people = new ArrayList<>();

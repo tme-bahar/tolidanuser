@@ -291,6 +291,8 @@ public class First extends Activity {
                 return;
             }
             Main.user = dp.getPerson(nationalCode);
+            Main.teams = dp.getTeams(Main.user);
+            Log.i("national code",nationalCode);
             try{
 
                 for(int x=0;x<Integer.parseInt(shared.getString("peoplenumber", "0"));x++){
@@ -325,6 +327,7 @@ public class First extends Activity {
                     b.setText("ورود");
                     b.setBackgroundResource(R.drawable.but);
                     Toast.makeText(getApplicationContext(),"تیم ها و محصولات دریافت نشدند!",Toast.LENGTH_LONG).show();
+                    return;
                 }
                 try{
                     String[] people=tables[2].split("®");

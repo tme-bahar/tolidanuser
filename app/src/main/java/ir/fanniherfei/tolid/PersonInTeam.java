@@ -11,7 +11,7 @@ public class PersonInTeam{
     public String buildHelpQuota;
     public String introduceBudgetManQuota;
     public String managerQuota;
-    public String sellingMnagerQuota;
+    public String sellingManagerQuota;
     public String budgetQuota;
     public String sumQuotas;
 
@@ -21,9 +21,9 @@ public class PersonInTeam{
     }
 
     //put data
-    public boolean put(ArrayList<String> data){
+    public void put(ArrayList<String> data){
         if(data.size() !=11)
-            return false;
+            return;
         name = data.get(0);
         profession = data.get(1);
         eduQuota = data.get(2);
@@ -32,10 +32,9 @@ public class PersonInTeam{
         buildHelpQuota = data.get(5);
         introduceBudgetManQuota = data.get(6);
         managerQuota = data.get(7);
-        sellingMnagerQuota = data.get(8);
+        sellingManagerQuota = data.get(8);
         budgetQuota = data.get(9);
         sumQuotas = data.get(10);
-        return true;
     }
 
     //get data
@@ -59,7 +58,7 @@ public class PersonInTeam{
             case 7:
                 return managerQuota;
             case 8:
-                return sellingMnagerQuota;
+                return sellingManagerQuota;
             case 9:
                 return budgetQuota;
             case 10:

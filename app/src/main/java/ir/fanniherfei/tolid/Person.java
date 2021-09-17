@@ -2,7 +2,9 @@ package ir.fanniherfei.tolid;
 
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Person {
     public String name;
@@ -43,6 +45,11 @@ public class Person {
         eduMajor = data.get(11);
         this.sex = Sex.values()[Integer.parseInt(data.get(12))];
         about = data.get(13);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy");
+        Date date = new Date(System.currentTimeMillis());
+        if (!birth.isEmpty())
+        age = String.valueOf(Integer.parseInt(formatter.format(date)) - (Integer.parseInt(new String(new char[]{birth.charAt(2),birth.charAt(3)})) + 1921));
+
     }
 
     //get
@@ -90,7 +97,7 @@ public class Person {
     @Override
     public String toString(){
         StringBuilder sb=new StringBuilder();
-        sb.append(sex==Sex.male?"آقای":"خانم").append(" ");
+        sb.append(sex==Sex.مرد?"آقای":"خانم").append(" ");
         sb.append(name);
         sb.append(" فرزند ").append(father);
         sb.append(" با شماره ملی ").append(nationalCode);
@@ -118,6 +125,21 @@ public class Person {
     // print this person
     public void print(){
         Log.i(name,toString());
+    }
+
+    //get birth year
+    public String birthYear(){
+        return new String(new char[]{birth.charAt(0),birth.charAt(1),birth.charAt(2),birth.charAt(3)});
+    }
+
+    //get birth year
+    public String birthMounth(){
+        return new String(new char[]{birth.charAt(4),birth.charAt(5)});
+    }
+
+    //get birth year
+    public String birthDay(){
+        return new String(new char[]{birth.charAt(6),birth.charAt(7)});
     }
 
     // print all
