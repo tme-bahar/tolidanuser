@@ -79,78 +79,63 @@ public class First extends Activity {
         final SharedPreferences.Editor editor = shared.edit();
         final CardView maincv = (CardView)findViewById(R.id.card);
         pro.setVisibility(View.GONE);
-        et[1].setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
-                if (actionId == EditorInfo.IME_ACTION_DONE||(actionId == EditorInfo.IME_ACTION_NEXT)) {
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-                    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-                    b.performClick();
-                    handled = true;
-                }
-                return handled;
+        et[1].setOnEditorActionListener((v, actionId, event) -> {
+            boolean handled = false;
+            if (actionId == EditorInfo.IME_ACTION_DONE||(actionId == EditorInfo.IME_ACTION_NEXT)) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                b.performClick();
+                handled = true;
             }
+            return handled;
         });
-        et[0].setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
-                if ((actionId == EditorInfo.IME_ACTION_DONE)||(actionId == EditorInfo.IME_ACTION_NEXT)) {
-                    if(et[0].getVisibility() == View.GONE){
-                        handled = true;
-                        return handled;}
-                    if(et[0].getText().toString().length() != 10){
-                        at.Toast("شماره ملی باید 10 رقم باشد");
-                        handled = true;
-                        return handled;
-                    }
-                    et[1].requestFocus();
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.showSoftInput(et[1], InputMethodManager.SHOW_IMPLICIT);
+        et[0].setOnEditorActionListener((v, actionId, event) -> {
+            boolean handled = false;
+            if ((actionId == EditorInfo.IME_ACTION_DONE)||(actionId == EditorInfo.IME_ACTION_NEXT)) {
+                if(et[0].getVisibility() == View.GONE){
                     handled = true;
+                    return handled;}
+                if(et[0].getText().toString().length() != 10){
+                    at.Toast("شماره ملی باید 10 رقم باشد");
+                    handled = true;
+                    return handled;
                 }
-                return handled;
+                et[1].requestFocus();
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(et[1], InputMethodManager.SHOW_IMPLICIT);
+                handled = true;
             }
+            return handled;
         });
         editor.putBoolean("connected", false);
         editor.apply();
-        OnClickListener o=new OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-                // TODO Auto-generated method stub
-                if(!"ورود".equals(b.getText().toString()))
-                    return;
-                if(et[0].getText().toString().length() != 10){
-                    at.Toast("شماره ملی باید 10 رقم باشد");
-                    return;
-                }
-                if(et[1].getText().toString().isEmpty()){
-                    at.Toast("رمز عبور را پر کنید");
-                    return;
-                }
-                nationalCode = et[0].getText().toString();
-                G.url2=et[0].getText().toString()+"&"+et[1].getText().toString();
-                G.password=G.url2;
-                G.url2="a";
-                G.recieve=true;
-                G.last=1;
-                new NetCheck().execute();
+        OnClickListener o= arg0 -> {
+            // TODO Auto-generated method stub
+            if(!"ورود".equals(b.getText().toString()))
+                return;
+            if(et[0].getText().toString().length() != 10){
+                at.Toast("شماره ملی باید 10 رقم باشد");
+                return;
             }
+            if(et[1].getText().toString().isEmpty()){
+                at.Toast("رمز عبور را پر کنید");
+                return;
+            }
+            nationalCode = et[0].getText().toString();
+            G.url2=et[0].getText().toString()+"&"+et[1].getText().toString();
+            G.password=G.url2;
+            G.url2="a";
+            G.recieve=true;
+            G.last=1;
+            new NetCheck().execute();
         };
         b.setOnClickListener(o);
-        p.setOnClickListener(new OnClickListener() {
+        p.setOnClickListener(arg0 -> {
 
-            @Override
-            public void onClick(View arg0) {
-                // TODO Auto-generated method stub
+            G.changenum=Integer.parseInt(shared.getString("peoplenumber", "0")+1);
+            G.importPeopleNumber=Integer.parseInt(shared.getString("peoplenumber", "0"))+1;
 
-                G.changenum=Integer.parseInt(shared.getString("peoplenumber", "0")+1);
-                G.importPeopleNumber=Integer.parseInt(shared.getString("peoplenumber", "0"))+1;
-
-                startActivity(new Intent(First.this,NewPerson.class));
-            }
+            startActivity(new Intent(First.this,NewPerson.class));
         });
     }
 
@@ -292,7 +277,8 @@ public class First extends Activity {
             }
             Main.user = dp.getPerson(nationalCode);
             Main.teams = dp.getTeams(Main.user);
-            Log.i("national code",nationalCode);
+            Main.bill = dp.getBill(Main.user.index);
+            Log.i("index",String.valueOf(Main.user.index));
             try{
 
                 for(int x=0;x<Integer.parseInt(shared.getString("peoplenumber", "0"));x++){

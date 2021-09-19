@@ -10,26 +10,28 @@ public class DataOprate {
     private String wholeText = "";
     private String text = "";
     public boolean hasError ;
-    private String[] taxtTables;
-    private ArrayList<String>[] tables = new ArrayList[5];
-    private ArrayList<Project> allprojects = new ArrayList<>();
+    private String[] textTables;
+    private ArrayList[] tables = new ArrayList[5];
+    private ArrayList<Project> allProjects = new ArrayList<>();
     private ArrayList<Team> allTeams = new ArrayList<>();
     private ArrayList<Person> people = new ArrayList<>();
+    private ArrayList<BillObj> Bills = new ArrayList<>();
     private ArrayList<News> News = new ArrayList<>();
     //constructor
     public DataOprate(String wholeText){
         this.wholeText = wholeText;
         String text = wholeToText(wholeText);
-        boolean hasError = isError(text);
-        this.hasError = hasError;
+        hasError = isError(text);
         if(hasError)
             return;
-        ArrayList<String> tables[] = createTables(text);
+        ArrayList<String>[] tables = createTables(text);
         if(tables.length <5){
             hasError = true;
             return;}
         exportTeamsAndProjects(tables[1]);
         exportPeopleAndNews(tables[2]);
+        exportBill(tables[3]);
+        Log.i("bills",String.valueOf(Bills.get(0).nodes.get(0).cast));
     }
 
     //get person
@@ -53,13 +55,15 @@ public class DataOprate {
     //object people and news
     private void exportPeopleAndNews(ArrayList<String> PeopleAndNews){
         ArrayList<Person> people = new ArrayList<>();
-        ArrayList<String> currentObj = new ArrayList<>();
+        int  counter = 0;
+        ArrayList<String> currentObj ;
         for (int i =0;i<PeopleAndNews.size();i++){
             currentObj = new ArrayList<>();
             for (int j =0; (j<14) && (i<PeopleAndNews.size()) ;j++,i++){
                 currentObj.add(PeopleAndNews.get(i));
             }
-            Person temp = new Person(currentObj);
+            counter++;
+            Person temp = new Person(counter,currentObj);
             if(!temp.isEmpty()) {
                 people.add(temp);
             }
@@ -91,10 +95,43 @@ public class DataOprate {
             }
             i--;
         }
-        allprojects = projects;
+        allProjects = projects;
         allTeams = teams;
     }
 
+    //object bill
+    private void exportBill(ArrayList<String> bills){
+        ArrayList<BillObj> result = new ArrayList<>();
+        int counter = 0;
+        for (int i =0;i<bills.size();i++){
+            String[] data = new String[3];
+            for (int j =0; (j<3) && (i<bills.size()) ;j++,i++){
+                data[j] = bills.get(i);
+            }
+            counter++;
+            if(!data[0].isEmpty())
+            {
+                String[] projectNodes = data[0].split("¶");
+                String[] castNodes = data[1].split("¶");
+                String[] dateNodes = data[2].split("¶");
+                BillObj bo = new BillObj(counter);
+                for (int k = 0;k <castNodes.length;k++) {
+                    bo.put(new BillNode(projectNodes[k],castNodes[k],dateNodes[k]));
+                }
+                result.add(bo);
+            }
+            i--;
+        }
+        this.Bills =result;
+    }
+
+    //get bill by index
+    public BillObj getBill(int index){
+        for (BillObj bo:Bills)
+            if(bo.index == index)
+                return bo;
+        return null;
+    }
     //print table
     public void printTable(ArrayList<String>[] tables){
         StringBuilder result = new StringBuilder();
@@ -123,7 +160,7 @@ public class DataOprate {
     private ArrayList<String>[] createTables(String text){
         String[] taxtTables = text.split("©");
         ArrayList<String> tables[] = new ArrayList[taxtTables.length];
-        this.taxtTables = taxtTables;
+        this.textTables = taxtTables;
         for (int i =0;i<tables.length;i++)
         {
             tables[i] = new ArrayList<>();

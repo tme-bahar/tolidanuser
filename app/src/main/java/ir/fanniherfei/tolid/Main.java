@@ -45,6 +45,7 @@ public class Main extends Activity {
     boolean billOpened = false;
     public static Person user;
     public static List<Team> teams;
+    public static BillObj bill;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,61 +53,64 @@ public class Main extends Activity {
         setContentView(R.layout.main_page);
         final SharedPreferences shared = getSharedPreferences("Prefs", MODE_PRIVATE);
         final SharedPreferences.Editor editor = shared.edit();
-        Log.i("Name",user.name);
-        String[] pass=G.password.split("&");
-        String a= dePass(Integer.parseInt(pass[1]));
-        int num=((Integer.parseInt(a)-1)*14)+1;
-        G.name=shared.getString("people"+ num,"");
+        Log.i("Name", user.name);
+        String[] pass = G.password.split("&");
+        String a = dePass(Integer.parseInt(pass[1]));
+        int num = ((Integer.parseInt(a) - 1) * 14) + 1;
+        G.name = shared.getString("people" + num, "");
 
         //LOADING PEOPLE
-        String[] passs=G.password.split("&");
-        String s= dePass(Integer.parseInt(passs[1]));
-        G.changenum=Integer.parseInt(shared.getString("peoplenumber", "0"));
-        G.importPeopleNumber=Integer.parseInt(s.trim());
-        G.last=2;
+        String[] passs = G.password.split("&");
+        String s = dePass(Integer.parseInt(passs[1]));
+        G.changenum = Integer.parseInt(shared.getString("peoplenumber", "0"));
+        G.importPeopleNumber = Integer.parseInt(s.trim());
+        G.last = 2;
         CardView cvInfo = findViewById(R.id.cardView2);
         Button more = findViewById(R.id.button);
         ViewGroup.LayoutParams cvinfop = cvInfo.getLayoutParams();
         height = 150;
         more.setOnClickListener(v -> {
-            if(!moreOpened){
+            if (!moreOpened) {
                 more.setText("بستن");
-            new CountDownTimer(2000, 5) {
+                new CountDownTimer(2000, 5) {
 
-            public void onTick(long millisUntilFinished) {
-                if(height >400)
-                    return;
-                cvinfop.height = cvinfop.height+(int) pxFromDp(Main.this,4);
-                height +=4;
-                cvInfo.setLayoutParams(cvinfop);
-            }
-            public void onFinish() {
+                    public void onTick(long millisUntilFinished) {
+                        if (height > 400)
+                            return;
+                        cvinfop.height = cvinfop.height + (int) pxFromDp(Main.this, 4);
+                        height += 4;
+                        cvInfo.setLayoutParams(cvinfop);
+                    }
 
-            }
-        }.start();
-        }else{
+                    public void onFinish() {
+
+                    }
+                }.start();
+            } else {
                 more.setText("بیشتر");
                 new CountDownTimer(2000, 5) {
 
                     public void onTick(long millisUntilFinished) {
-                        if(height <150)
+                        if (height < 150)
                             return;
-                        cvinfop.height = cvinfop.height-(int) pxFromDp(Main.this,4);
-                        height -=4;
+                        cvinfop.height = cvinfop.height - (int) pxFromDp(Main.this, 4);
+                        height -= 4;
                         cvInfo.setLayoutParams(cvinfop);
                     }
-                    public void onFinish() {}
+
+                    public void onFinish() {
+                    }
                 }.start();
             }
             moreOpened = !moreOpened;
         });
 
         //LOADING PERSON
-        try{
-            final TextView[] et={findViewById(R.id.textView1), findViewById(R.id.textView2), findViewById(R.id.textView3), findViewById(R.id.textView4),findViewById(R.id.textView5), findViewById(R.id.textView6), findViewById(R.id.textView7), findViewById(R.id.textView8), findViewById(R.id.textView9), findViewById(R.id.textView10), findViewById(R.id.textView11), findViewById(R.id.textView12)};
+        try {
+            final TextView[] et = {findViewById(R.id.textView1), findViewById(R.id.textView2), findViewById(R.id.textView3), findViewById(R.id.textView4), findViewById(R.id.textView5), findViewById(R.id.textView6), findViewById(R.id.textView7), findViewById(R.id.textView8), findViewById(R.id.textView9), findViewById(R.id.textView10), findViewById(R.id.textView11), findViewById(R.id.textView12)};
             et[0].setText(user.name);
             et[1].setText(user.nationalCode);
-            et[2].setText(user.birthYear()+"/"+user.birthMounth()+"/"+user.birthDay());
+            et[2].setText(user.birthYear() + "/" + user.birthMounth() + "/" + user.birthDay());
             et[3].setText(user.father);
             et[4].setText(user.age);
             et[5].setText(user.phoneNumber);
@@ -116,19 +120,19 @@ public class Main extends Activity {
             et[9].setText(user.eduPlace);
             et[10].setText(user.eduMajor);
             et[11].setText(user.sex.toString());
-        }catch (Exception e) {
-            Toast.makeText(getApplicationContext(),e.toString(),Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
         }
 
         //constraint
         final ConstraintLayout cons = findViewById(R.id.cons);
-        G.team=true;
+        G.team = true;
 
 
         //photo
         //showing
         img = findViewById(R.id.imageView);
-        new LoadImage().execute("http://www.tmebahar.ir/uploads/gallery.php/person_"+ G.importPeopleNumber +".jpg");
+        new LoadImage().execute("http://www.tmebahar.ir/uploads/gallery.php/person_" + G.importPeopleNumber + ".jpg");
 
         //sending
         CardView cvb = findViewById(R.id.cardView);
@@ -141,7 +145,7 @@ public class Main extends Activity {
 
         //team
         final RecyclerView teams = findViewById(R.id.teams);
-        MyRecyclerViewAdapter adapter = new MyRecyclerViewAdapter(Main.this,Main.teams);
+        MyRecyclerViewAdapter adapter = new MyRecyclerViewAdapter(Main.this, Main.teams);
         teams.setAdapter(adapter);
 
         //team list
@@ -153,14 +157,14 @@ public class Main extends Activity {
         final View teamBottom = findViewById(R.id.button12);
         final CardView topTeamHolder = findViewById(R.id.topTeamHolder);
         teambtn.setOnClickListener(v -> {
-            if(teamOpened){
-                teambtn.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(Main.this,R.drawable.arrow_down), null);
+            if (teamOpened) {
+                teambtn.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(Main.this, R.drawable.arrow_down), null);
                 teamBottom.setBackgroundColor(Color.parseColor("#757575"));
                 topTeamHolder.setVisibility(View.GONE);
                 teams.setVisibility(View.GONE);
                 teamOpened = false;
-            }else{
-                teambtn.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(Main.this,R.drawable.arrow_up), null);
+            } else {
+                teambtn.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(Main.this, R.drawable.arrow_up), null);
                 teamBottom.setBackgroundColor(Color.parseColor("#03DAC5"));
                 topTeamHolder.setVisibility(View.VISIBLE);
                 teams.setVisibility(View.VISIBLE);
@@ -169,32 +173,35 @@ public class Main extends Activity {
         });
         teambtn.performClick();
         teambtn.performClick();
-        /*
+
         //bill
         //team main
-        final RecyclerView bills = findViewById(R.id.teams);
+        final RecyclerView bills = findViewById(R.id.Bill);
+        MyRecyclerViewAdapterBill adapterBill = new MyRecyclerViewAdapterBill(Main.this, Main.bill);
+        bills.setAdapter(adapterBill);
+        //team list
+        bills.setLayoutManager(new LinearLayoutManager(this));
+        bills.setAdapter(adapterBill);
         //opening and closing
         final Button billbtn = findViewById(R.id.button13);
         final View billBottom = findViewById(R.id.button112);
         final CardView topBillHolder = findViewById(R.id.topBillHolder);
-        billbtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(billOpened){
-                    billbtn.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(Main.this,R.drawable.arrow_down), null);
-                    billBottom.setBackgroundColor(Color.parseColor("#757575"));
-                    topBillHolder.setVisibility(View.GONE);
-                    bills.setVisibility(View.GONE);
-                    billOpened = false;
-                }else{
-                    billbtn.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(Main.this,R.drawable.arrow_up), null);
-                    billBottom.setBackgroundColor(Color.parseColor("#03DAC5"));
-                    topBillHolder.setVisibility(View.VISIBLE);
-                    bills.setVisibility(View.VISIBLE);
-                    billOpened = true;
-                }
+        billbtn.setOnClickListener(v -> {
+            if (billOpened) {
+                billbtn.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(Main.this, R.drawable.arrow_down), null);
+                billBottom.setBackgroundColor(Color.parseColor("#757575"));
+                topBillHolder.setVisibility(View.GONE);
+                bills.setVisibility(View.GONE);
+                billOpened = false;
+            } else {
+                billbtn.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(Main.this, R.drawable.arrow_up), null);
+                billBottom.setBackgroundColor(Color.parseColor("#03DAC5"));
+                topBillHolder.setVisibility(View.VISIBLE);
+                bills.setVisibility(View.VISIBLE);
+                billOpened = true;
             }
-        });*/
+        });
+
     }
 
     @Override

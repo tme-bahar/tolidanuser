@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Person {
+    public int index;
     public String name;
     public String nationalCode;
     public String birth;
@@ -22,12 +23,13 @@ public class Person {
     public String about;
 
     //constructor
-    public Person(ArrayList<String> data){
-        put(data);
+    public Person(int index,ArrayList<String> data){
+        put(index,data);
     }
 
     //put info
-    public void put(ArrayList<String> data){
+    public void put(int index,ArrayList<String> data){
+        this.index = index;
         if (data.size() != 14)
             return;
         if(data.get(12).isEmpty())
